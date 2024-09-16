@@ -1,0 +1,98 @@
+.App {
+  text-align: center;
+}
+
+.App-logo {
+  height: 40vmin;
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .App-logo {
+    animation: App-logo-spin infinite 20s linear;
+  }
+}
+
+.App-header {
+  background-color: #f4f4f4; /* Цвет фона шапки */
+  min-height: 10vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 10px;
+  font-size: calc(10px + 2vmin);
+  color: black;
+}
+
+.App-link {
+  color: #61dafb;
+}
+
+.header {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  padding: 10px;
+  background-color: #f4f4f4; /* Цвет фона шапки */
+  color: black;
+}
+
+.footer {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  padding: 10px;
+  background-color: #282c34;
+  color: white;
+}
+
+.header button, .footer button {
+  margin: 0 10px;
+  background-color: #61dafb;
+  border: none;
+  color: white;
+  padding: 10px 20px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+.header button:hover, .footer button:hover {
+  background-color: #21a1f1;
+}
+
+.main-content {
+  padding: 20px;
+}
+
+.users-table {
+  margin: 20px;
+  border-collapse: collapse;
+  width: 100%;
+}
+
+.table-header {
+  font-weight: bold;
+  background-color: #f4f4f4; /* Цвет шапки таблицы */
+  padding: 10px;
+}
+
+.table-content {
+  padding: 10px;
+}
+
+.table-content p, .table-header h2 {
+  margin: 0;
+}
+
+@keyframes App-logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
