@@ -4,10 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="692c2780-a6c6-42c9-a302-b4c7427a3a3f" name="Changes" comment="срверная часть и клиентская">
+    <list default="true" id="692c2780-a6c6-42c9-a302-b4c7427a3a3f" name="Changes" comment="verceljson">
       <changelist_data name="https://github.com/asterlion/itransition-task4" email="" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/vercel.json" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -73,7 +72,7 @@
       <option name="presentableId" value="Default" />
       <updated>1726395387345</updated>
       <workItem from="1726395388603" duration="3504000" />
-      <workItem from="1726486590138" duration="13105000" />
+      <workItem from="1726486590138" duration="13435000" />
     </task>
     <task id="LOCAL-00001" summary="commit local changes">
       <created>1726397443292</created>
@@ -112,6 +111,7 @@
   <component name="VcsManagerConfiguration">
     <MESSAGE value="commit local changes" />
     <MESSAGE value="срверная часть и клиентская" />
-    <option name="LAST_COMMIT_MESSAGE" value="срверная часть и клиентская" />
+    <MESSAGE value="verceljson" />
+    <option name="LAST_COMMIT_MESSAGE" value="verceljson" />
   </component>
 </project>
