@@ -4,7 +4,7 @@ const bcrypt = require('bcryptjs');
 const mysql = require('mysql2');
 const app = express();
 const port = 3000;
-const secretKey = 'your_secret_key'; // Замените на свой секретный ключ
+const secretKey = '7554817'; // Замените на свой секретный ключ
 
 // Middleware для работы с JSON
 app.use(express.json());
