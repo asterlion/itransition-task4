@@ -23,9 +23,7 @@ function Login({ onLogin }) {
         // Сохранение токена в localStorage
         localStorage.setItem('token', data.token);
 
-        // Здесь предполагается, что имя пользователя возвращается вместе с данными аутентификации
-        // Вам нужно адаптировать это в зависимости от вашего API
-        onLogin(data.userName); // Передаем имя пользователя в родительский компонент
+        onLogin(data.userName);
     };
 
     return (

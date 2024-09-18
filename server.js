@@ -3,8 +3,8 @@ const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 const mysql = require('mysql2');
 const app = express();
-const port = 3000;
-const secretKey = '7554817'; // Замените на свой секретный ключ
+const port = process.env.PORT || 3000;
+const secretKey = '7554817';
 
 // Middleware для работы с JSON
 app.use(express.json());
@@ -17,7 +17,6 @@ const db = mysql.createConnection({
     database: 'task4'
 });
 
-// Подключение к базе данных
 db.connect((err) => {
     if (err) {
         console.error('Ошибка подключения к базе данных:', err);
