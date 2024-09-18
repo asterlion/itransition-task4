@@ -1,44 +1,47 @@
 import React, { useState } from 'react';
+import 'bootstrap/dist/css/bootstrap.min.css';
 import './App.css';
-import UsersTable from './components/UsersTable'; // Импортируем компонент таблицы пользователей
+import UsersTable from './components/UsersTable';
 import Register from './components/Register';
 import Login from './components/Login';
 
 function App() {
-    const [isAuthenticated, setIsAuthenticated] = useState(false); // Состояние для аутентификации пользователя
-    const [userName, setUserName] = useState(''); // Состояние для имени пользователя
+    const [isAuthenticated, setIsAuthenticated] = useState(false);
+    const [userName, setUserName] = useState('');
 
-    // Обработчик входа пользователя
     const handleLogin = (name) => {
         setIsAuthenticated(true);
         setUserName(name);
     };
 
-    // Обработчик выхода пользователя
     const handleLogout = () => {
         setIsAuthenticated(false);
         setUserName('');
-        localStorage.removeItem('token'); // Удаляем токен при выходе
+        localStorage.removeItem('token');
     };
 
     return (
-        <div className="App">
-            <div className="header App-header">
+        <div className="container">
+            <header className="d-flex justify-content-between align-items-center py-3">
                 {isAuthenticated ? (
-                    <div>
-                        <span>Welcome, {userName}!</span>
-                        <button onClick={handleLogout}>Logout</button>
+                    <div className="d-flex align-items-center">
+                        <span className="me-3">Welcome, {userName}!</span>
+                        <button className="btn btn-outline-danger" onClick={handleLogout}>Logout</button>
                     </div>
                 ) : (
-                    <div>
-                        <Login onLogin={handleLogin} />
-                        <Register onLogin={handleLogin} />
+                    <div className="d-flex justify-content-between w-100">
+                        <div className="me-auto">
+                            <Login onLogin={handleLogin} />
+                        </div>
+                        <div className="ms-auto">
+                            <Register onLogin={handleLogin} />
+                        </div>
                     </div>
                 )}
-            </div>
-            <div className="main-content">
-                <UsersTable isAuthenticated={isAuthenticated} /> {/* Передаем состояние аутентификации */}
-            </div>
+            </header>
+            <main className="mt-4">
+                <UsersTable isAuthenticated={isAuthenticated} />
+            </main>
         </div>
     );
 }
