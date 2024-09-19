@@ -3,7 +3,7 @@ const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 const mysql = require('mysql2');
 const app = express();
-const port = process.env.PORT || 3000;
+const port = 3000;
 const secretKey = '7554817';
 
 // Middleware для работы с JSON
@@ -16,6 +16,35 @@ const db = mysql.createConnection({
     password: 'admin',
     database: 'task4'
 });
+
+const authenticateJWT = (req, res, next) => {
+    const token = req.headers.authorization && req.headers.authorization.split(' ')[1];
+
+    if (!token) {
+        return res.status(401).json({ message: 'Требуется авторизация.' });
+    }
+
+    jwt.verify(token, secretKey, (err, decoded) => {
+        if (err) {
+            return res.status(403).json({ message: 'Неверный или истекший токен.' });
+        }
+
+        const query = 'SELECT status FROM users WHERE username = ?';
+        db.query(query, [decoded.username], (err, results) => {
+            if (err || results.length === 0) {
+                return res.status(403).json({ message: 'Пользователь не найден.' });
+            }
+
+            const userStatus = results[0].status;
+            if (userStatus === 'blocked' || userStatus === 'deleted') {
+                return res.status(403).json({ message: 'Пользователь заблокирован или удалён.' });
+            }
+
+            req.user = decoded;
+            next();
+        });
+    });
+};
 
 db.connect((err) => {
     if (err) {
@@ -101,7 +130,7 @@ app.post('/api/login', async (req, res) => {
 });
 
 // Маршрут для получения списка пользователей
-app.get('/api/users', (req, res) => {
+app.get('/api/users', authenticateJWT, (req, res) => {
     const query = 'SELECT id, username, email, registration_date, last_login, status FROM users WHERE status IN (\'active\', \'blocked\')';
     db.query(query, (err, results) => {
         if (err) {
@@ -113,22 +142,31 @@ app.get('/api/users', (req, res) => {
 });
 
 // Маршрут для блокировки пользователей
-app.post('/api/block', (req, res) => {
+app.post('/api/block', authenticateJWT, (req, res) => {
     const { userIds } = req.body;
+    const currentUserId = req.user.id; // Текущий пользователь
 
     if (!userIds || userIds.length === 0) {
         return res.status(400).send('Нет пользователей для блокировки.');
     }
 
+    // Проверяем, пытается ли текущий пользователь заблокировать себя
+    if (userIds.includes(currentUserId)) {
+        return res.status(403).send('Нельзя заблокировать себя.');
+    }
+
     const query = 'UPDATE users SET status = "blocked" WHERE id IN (?)';
     db.query(query, [userIds], (err, result) => {
         if (err) return res.status(500).send('Ошибка сервера при блокировке пользователей.');
+
+        // Если пользователь заблокировал других, но сам себя не заблокировал, возвращаем успех
         res.status(200).send({ message: 'Пользователи заблокированы!' });
     });
 });
 
+
 // Маршрут для разблокировки пользователей
-app.post('/api/unblock', (req, res) => {
+app.post('/api/unblock', authenticateJWT, (req, res) => {
     const { userIds } = req.body;
 
     if (!userIds || userIds.length === 0) {
@@ -143,17 +181,38 @@ app.post('/api/unblock', (req, res) => {
 });
 
 // Маршрут для удаления пользователей
-app.post('/api/delete', (req, res) => {
+app.post('/api/delete', authenticateJWT, (req, res) => {
     const { userIds } = req.body;
+    const currentUserId = req.user.id; // Текущий пользователь
 
     if (!userIds || userIds.length === 0) {
         return res.status(400).send('Нет пользователей для удаления.');
     }
 
+    // Проверяем, пытается ли текущий пользователь удалить себя
+    if (userIds.includes(currentUserId)) {
+        return res.status(403).send('Нельзя удалить самого себя.');
+    }
+
     const query = 'DELETE FROM users WHERE id IN (?)';
     db.query(query, [userIds], (err, result) => {
         if (err) return res.status(500).send('Ошибка сервера при удалении пользователей.');
+
+        // Если пользователь удалил других, но сам себя не удалил, возвращаем успех
         res.status(200).send({ message: 'Пользователи удалены!' });
+    });
+});
+
+// Маршрут для получения статуса текущего пользователя
+app.get('/api/user/status', authenticateJWT, (req, res) => {
+    const query = 'SELECT status FROM users WHERE username = ?';
+    db.query(query, [req.user.username], (err, results) => {
+        if (err || results.length === 0) {
+            return res.status(500).send('Ошибка при получении статуса пользователя.');
+        }
+
+        const userStatus = results[0].status;
+        res.json(userStatus);
     });
 });
 

@@ -18,6 +18,7 @@ function App() {
         setIsAuthenticated(false);
         setUserName('');
         localStorage.removeItem('token');
+        window.location.href = '/'; // Перенаправление на главную страницу
     };
 
     return (
@@ -40,7 +41,7 @@ function App() {
                 )}
             </header>
             <main className="mt-4">
-                <UsersTable isAuthenticated={isAuthenticated} />
+                <UsersTable isAuthenticated={isAuthenticated} onLogout={handleLogout} />
             </main>
         </div>
     );

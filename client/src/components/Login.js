@@ -21,10 +21,16 @@ function Login({ onLogin }) {
         const data = await response.json();
         console.log(data);
 
-        // Сохранение токена в localStorage
-        localStorage.setItem('token', data.token);
+        if (response.ok) {
+            // Сохранение токена в localStorage
+            localStorage.setItem('token', data.token);
 
-        onLogin(data.userName);
+            // Вызов функции onLogin для обновления состояния аутентификации
+            onLogin(data.userName);
+        } else {
+            // Обработка ошибки
+            alert('Ошибка входа: ' + data.message);
+        }
     };
 
     return (

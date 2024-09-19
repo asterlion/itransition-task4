@@ -1,24 +1,14 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import axios from 'axios';
 import moment from 'moment-timezone';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './UsersTable.css';
 
-const UsersTable = ({ isAuthenticated }) => {
+const UsersTable = ({ isAuthenticated, onLogout }) => {
     const [users, setUsers] = useState([]);
     const [selectedUsers, setSelectedUsers] = useState([]);
 
-    useEffect(() => {
-        if (isAuthenticated) {
-            const loadUsers = async () => {
-                await fetchUsers();
-            };
-
-            loadUsers();
-        }
-    }, [isAuthenticated]);
-
-    const fetchUsers = async () => {
+    const fetchUsers = useCallback(async () => {
         try {
             const response = await axios.get('/api/users', {
                 headers: {
@@ -27,10 +17,31 @@ const UsersTable = ({ isAuthenticated }) => {
             });
             console.log('Полученные пользователи:', response.data);
             setUsers(response.data);
+
+            // Проверка статуса текущего пользователя
+            const { data: userStatus } = await axios.get('/api/user/status', {
+                headers: {
+                    'Authorization': `Bearer ${localStorage.getItem('token')}`
+                }
+            });
+
+            if (userStatus === 'blocked' || userStatus === 'deleted') {
+                onLogout(); // Вызов функции logout
+            }
         } catch (error) {
             console.error('Ошибка получения пользователей:', error);
+            // Также можно проверить, есть ли ошибка из-за заблокированного пользователя
+            if (error.response && error.response.status === 403) {
+                onLogout(); // Вызов функции logout
+            }
         }
-    };
+    }, [onLogout]);
+
+    useEffect(() => {
+        if (isAuthenticated) {
+            fetchUsers();
+        }
+    }, [isAuthenticated, fetchUsers]);
 
     const handleSelectUser = (id) => {
         setSelectedUsers((prevSelected) =>
